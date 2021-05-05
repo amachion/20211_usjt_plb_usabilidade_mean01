@@ -19,7 +19,7 @@ export class ClienteInserirComponent {
   onAdicionarCliente(form: NgForm) {
     if (form.invalid) {
       return;
-      }
+    }
     //const cliente: Cliente = {
     //  nome: form.value.nome,
     //  fone: form.value.fone,
@@ -29,8 +29,9 @@ export class ClienteInserirComponent {
       form.value.nome,
       form.value.fone,
       form.value.email
-      );
+    );
 
+    form.resetForm();
 
 
     //this.clienteAdicionado.emit(cliente);
