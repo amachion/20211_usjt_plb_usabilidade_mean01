@@ -15,13 +15,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ClienteListaComponent } from './clientes/cliente-lista/cliente-lista.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ClienteService } from './clientes/cliente.service';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
     AppComponent, ClienteInserirComponent, CabecalhoComponent, ClienteListaComponent
   ],
   imports: [
-    BrowserModule, FormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule,
+    BrowserModule, AppRoutingModule, FormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule,
     HttpClientModule,
   ],
   providers: [ClienteService],
