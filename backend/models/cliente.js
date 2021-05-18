@@ -10,4 +10,4 @@ const clienteSchema = mongoose.Schema({
 
 //exportar o modelo para torná-lo acessível aos outros módulos da aplicação
 //Cliente é o nome associado a esse schema
-module.exports = mongoose.model ('Cliente', clienteSchema);
+module.exports = mongoose.model('Cliente', clienteSchema);

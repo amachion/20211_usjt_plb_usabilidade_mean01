@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule} from '@angular/common/http';
-
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClienteInserirComponent } from './clientes/cliente-inserir/cliente-inserir.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,7 +22,7 @@ import { ClienteService } from './clientes/cliente.service';
   ],
   imports: [
     BrowserModule, FormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule,
-    HttpClientModule,
+    HttpClientModule, AppRoutingModule
   ],
   providers: [ClienteService],
   bootstrap: [AppComponent]
