@@ -3,8 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClienteListaComponent } from './clientes/cliente-lista/cliente-lista.component';
 import { ClienteInserirComponent } from './clientes/cliente-inserir/cliente-inserir.component';
 const routes: Routes = [
-  { path: '', component: ClienteListaComponent },
-  {path: 'criar', component: ClienteInserirComponent}
+  {path: '', component: ClienteListaComponent },
+  {path: 'criar', component: ClienteInserirComponent},
+  {path: 'editar/:idCliente', component: ClienteInserirComponent}
 ];
 @NgModule({
   imports: [

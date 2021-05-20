@@ -53,4 +53,25 @@ export class ClienteService {
   getListaDeClientesAtualizadaObservable() {
     return this.listaClientesAtualizada.asObservable();
   }
+
+  getCliente (idCliente: string) {
+    return {...this.clientes.find((cli) => cli.id === idCliente)};
+  }
+
+  atualizarCliente (id: string, nome: string, fone: string, email:string) {
+    const cliente: Cliente = { id, nome, fone, email};
+    console.log(cliente);
+    this.httpClient.put(`http://localhost:3000/api/clientes/${id}`, cliente)
+    .subscribe((res => {
+      const copia = [...this.clientes];
+      const indice = copia.findIndex(cli => cli.id === cliente.id);
+      copia[indice] = cliente;
+      this.clientes = copia;
+      console.log(this.clientes);
+      this.listaClientesAtualizada.next([...this.clientes]);
+    }));
+  }
+
+
+
 }
