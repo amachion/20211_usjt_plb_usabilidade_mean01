@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const clienteRoutes = require('./rotas/clientes');
 
 const Cliente = require('./models/cliente');
 
@@ -10,10 +11,10 @@ app.use(bodyParser.json());
 
 mongoose.connect('mongodb+srv://user_base:outrasenha@cluster0.skf8n.mongodb.net/app-mean?retryWrites=true&w=majority')
   .then(() => {
-    console.log ("Conexão OK")
+    console.log("Conexão OK")
   })
   .catch(() => {
-    console.log ("Conexão NOK")
+    console.log("Conexão NOK")
   })
 
 app.use((req, res, next) => {
@@ -23,45 +24,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/api/clientes', (req, res, next) => {
-  const cliente = new Cliente({
-    nome: req.body.nome,
-    fone: req.body.fone,
-    email: req.body.email
-  })
-  cliente.save();
-  console.log (cliente);
-  res.status(201).json({mensagem: 'Cliente inserido com sucesso'})
-});
-
-app.get('/api/clientes/', (req, res, next) => {
-  Cliente.find().then( documents => {
-    //console.log(documents)
-    res.status(200).json({
-      mensagem: "Tudo OK",
-      clientes: documents
-    });
-  });
-});
-app.delete ('/api/clientes/:id', (req, res, next) => {
-  Cliente.deleteOne ({_id: req.params.id}).then((resultado) => {
-    console.log (resultado);
-    res.status(200).json({mensagem: "Cliente removido"})
-  });
-});
-
-app.put ('/api/clientes/:id', (req, res, next) => {
-  const cliente = new Cliente ({
-    _id: req.params.id,
-    nome: req.body.nome,
-    fone: req.body.fone,
-    email: req.body.email
-  });
-  Cliente.updateOne({_id: req.params.id}, cliente)
-  .then((resultado) => {
-    console.log(resultado)
-    res.status(200).json({mensagem:'Atualização realizada com sucesso!'})
-  });
-});
+app.use('/api/clientes', clienteRoutes);
 
 module.exports = app;
