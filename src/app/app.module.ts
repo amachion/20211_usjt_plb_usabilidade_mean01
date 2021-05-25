@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+//remover esse
+//import { FormsModule } from '@angular/forms';
+//inserir esse
+import { ReactiveFormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +17,7 @@ import { CabecalhoComponent } from './cabecalho/cabecalho.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ClienteListaComponent } from './clientes/cliente-lista/cliente-lista.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ClienteService } from './clientes/cliente.service';
 
 @NgModule({
@@ -21,7 +25,7 @@ import { ClienteService } from './clientes/cliente.service';
     AppComponent, ClienteInserirComponent, CabecalhoComponent, ClienteListaComponent
   ],
   imports: [
-    BrowserModule, FormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule,
+    BrowserModule, ReactiveFormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule, MatProgressSpinnerModule,
     HttpClientModule, AppRoutingModule
   ],
   providers: [ClienteService],

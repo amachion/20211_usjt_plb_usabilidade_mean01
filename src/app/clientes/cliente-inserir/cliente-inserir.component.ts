@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Cliente } from '../cliente.model';
 import { ClienteService } from '../cliente.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -13,41 +13,69 @@ export class ClienteInserirComponent implements OnInit {
   private modo: string = "criar";
   private idCliente: string;
   public cliente: Cliente;
+  public estaCarregando: boolean = false;
+  form: FormGroup;
   ngOnInit(){
+    this.form = new FormGroup({
+      nome: new FormControl (null, {
+      validators: [Validators.required, Validators.minLength(3)]
+      }),
+      fone: new FormControl (null, {
+      validators: [Validators.required]
+      }),
+      email: new FormControl (null, {
+      validators: [Validators.required, Validators.email]
+      })
+    })
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has("idCliente")) {
+      if (paramMap.has("idCliente")){
         this.modo = "editar";
         this.idCliente = paramMap.get("idCliente");
-        this.cliente = this.clienteService.getCliente(this.idCliente);
+        this.estaCarregando = true;
+        this.clienteService.getCliente(this.idCliente).subscribe( dadosCli => {
+          this.estaCarregando = false;
+          this.cliente = {
+            id: dadosCli._id,
+            nome: dadosCli.nome,
+            fone: dadosCli.fone,
+            email: dadosCli.email
+        };
+        this.form.setValue({
+          nome: this.cliente.nome,
+          fone: this.cliente.fone,
+          email: this.cliente.email
+        })
+      });
       }
-      else {
+      else{
         this.modo = "criar";
         this.idCliente = null;
       }
-    })
+    });
   }
 
   constructor(public clienteService: ClienteService, public route: ActivatedRoute) {}
 
-  onSalvarCliente(form: NgForm) {
-    if (form.invalid) {
+  onSalvarCliente() {
+    if (this.form.invalid) {
       return;
     }
+    this.estaCarregando = true;
     if (this.modo === "criar") {
       this.clienteService.adicionarCliente(
-        form.value.nome,
-        form.value.fone,
-        form.value.email
+        this.form.value.nome,
+        this.form.value.fone,
+        this.form.value.email
       );
     }
     else {
       this.clienteService.atualizarCliente(
         this.idCliente,
-        form.value.nome,
-        form.value.fone,
-        form.value.email
+        this.form.value.nome,
+        this.form.value.fone,
+        this.form.value.email
       )
     }
-    form.resetForm();
+    this.form.reset();
   }
 }

@@ -3,6 +3,7 @@ import { Cliente } from './cliente.model';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { stringify } from '@angular/compiler/src/util';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +11,7 @@ export class ClienteService {
   private clientes: Cliente[] = [];
   private listaClientesAtualizada = new Subject<Cliente[]>();
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private router:Router) {}
   getClientes():void {
     this.httpClient.get < {mensagem:string, clientes: any;} >('http://localhost:3000/api/clientes')
     .pipe(map((dados) => {
@@ -38,6 +39,7 @@ export class ClienteService {
         cliente.id = dados.id;
         this.clientes.push(cliente);
         this.listaClientesAtualizada.next([...this.clientes]);
+        this.router.navigate(['/']);
       }
     )
   }
@@ -55,7 +57,9 @@ export class ClienteService {
   }
 
   getCliente (idCliente: string) {
-    return {...this.clientes.find((cli) => cli.id === idCliente)};
+    //return {...this.clientes.find((cli) => cli.id === idCliente)};
+    return this.httpClient.get<{_id: string, nome: string, fone: string, email:
+      string}>(`http://localhost:3000/api/clientes/${idCliente}`);
   }
 
   atualizarCliente (id: string, nome: string, fone: string, email:string) {
@@ -69,6 +73,7 @@ export class ClienteService {
       this.clientes = copia;
       console.log(this.clientes);
       this.listaClientesAtualizada.next([...this.clientes]);
+      this.router.navigate(['/']);
     }));
   }
 
