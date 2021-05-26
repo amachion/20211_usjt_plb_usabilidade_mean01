@@ -3,6 +3,7 @@ import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Cliente } from '../cliente.model';
 import { ClienteService } from '../cliente.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { mimeTypeValidator} from './mime-type.validator';
 
 @Component({
   selector: 'app-cliente-inserir',
@@ -15,8 +16,9 @@ export class ClienteInserirComponent implements OnInit {
   public cliente: Cliente;
   public estaCarregando: boolean = false;
   form: FormGroup;
+  public previewImagem: string;
   ngOnInit(){
-    this.form = new FormGroup({
+    this.form = new FormGroup ({
       nome: new FormControl (null, {
       validators: [Validators.required, Validators.minLength(3)]
       }),
@@ -25,6 +27,10 @@ export class ClienteInserirComponent implements OnInit {
       }),
       email: new FormControl (null, {
       validators: [Validators.required, Validators.email]
+      }),
+      imagem: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [mimeTypeValidator]
       })
     })
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -65,7 +71,8 @@ export class ClienteInserirComponent implements OnInit {
       this.clienteService.adicionarCliente(
         this.form.value.nome,
         this.form.value.fone,
-        this.form.value.email
+        this.form.value.email,
+        this.form.value.imagem
       );
     }
     else {
@@ -77,5 +84,17 @@ export class ClienteInserirComponent implements OnInit {
       )
     }
     this.form.reset();
+  }
+  onImagemSelecionar (event: Event) {
+    const arquivo = (event.target as HTMLInputElement).files[0];
+    this.form.patchValue({'imagem': arquivo});
+    this.form.get('imagem').updateValueAndValidity();
+    //console.log(arquivo);
+    //console.log(this.form);
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImagem = reader.result as string;
+    }
+    reader.readAsDataURL(arquivo);
   }
 }

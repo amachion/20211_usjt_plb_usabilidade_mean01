@@ -1,8 +1,27 @@
 const express = require ("express");
 const router = express.Router();
 const Cliente = require('../models/cliente');
+const multer = require("multer");
 
-router.post('', (req, res, next) => {
+const MIME_TYPE_EXTENSAO_MAPA = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/bmp': 'bmp'
+}
+
+const armazenamento = multer.diskStorage({
+  destination: (req, file, callback) => {
+    let erro = MIME_TYPE_EXTENSAO_MAPA[file.mimetype] ? null : new Error('Mime Type Inválido');
+    callback (erro, "backend/imagens")
+  },
+  filename: (req, file, callback) => {
+    const nome = file.originalname.toLowerCase().split(" ").join("-");
+    const extensao = MIME_TYPE_EXTENSAO_MAPA[file.mimetype];
+    callback(null, `${nome}-${Date.now()}.${extensao}`);
+  }
+})
+router.post('', multer({storage: armazenamento}).single('imagem'), (req, res, next) => {
   const cliente = new Cliente({
     nome: req.body.nome,
     fone: req.body.fone,
