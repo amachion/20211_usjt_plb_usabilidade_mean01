@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClienteInserirComponent } from './clientes/cliente-inserir/cliente-inserir.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -25,7 +26,7 @@ import { ClienteService } from './clientes/cliente.service';
     AppComponent, ClienteInserirComponent, CabecalhoComponent, ClienteListaComponent
   ],
   imports: [
-    BrowserModule, ReactiveFormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatToolbarModule, MatExpansionModule, MatProgressSpinnerModule,
+    BrowserModule, ReactiveFormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatPaginatorModule, MatToolbarModule, MatExpansionModule, MatProgressSpinnerModule,
     HttpClientModule, AppRoutingModule
   ],
   providers: [ClienteService],
