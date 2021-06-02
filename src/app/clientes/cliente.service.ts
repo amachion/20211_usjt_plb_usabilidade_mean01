@@ -9,7 +9,7 @@ import {stringify} from '@angular/compiler/src/util';
 @Injectable({providedIn: 'root'})
 export class ClienteService {
     private clientes: Cliente[] = [];
-    private listaClientesAtualizada = new Subject<Cliente[]>();
+    private listaClientesAtualizada = new Subject<{clientes: Cliente[], maxClientes: number}>();
 
     constructor(private httpClient : HttpClient, private router : Router) {}
 
@@ -17,20 +17,23 @@ export class ClienteService {
     const parametros = `?pagesize=${pagesize}&page=${page}`;
     this.httpClient.get < {
         mensagem: string,
-        clientes: any
+        clientes: any,
+        maxClientes: number
     } > ('http://localhost:3000/api/clientes' + parametros)
             .pipe(map((dados) => {
-                return dados
-                    .clientes
-                    .map(cliente => {
-                        return {id: cliente._id, nome: cliente.nome, fone: cliente.fone, email: cliente.email}
-                    })
+                return {
+                  clientes: dados.clientes.map(cliente => {
+                        return {id: cliente._id, nome: cliente.nome, fone: cliente.fone, email: cliente.email, imagemURL: cliente.imagemURL
+                  }}),
+                  maxClientes: dados.maxClientes
+                }
             }))
-            .subscribe((clientes) => {
-                this.clientes = clientes;
-                this
-                    .listaClientesAtualizada
-                    .next([...this.clientes]);
+            .subscribe((dados) => {
+                this.clientes = dados.clientes;
+                this.listaClientesAtualizada.next({
+                  clientes: [...this.clientes],
+                  maxClientes: dados.maxClientes
+                });
             })
     }
     adicionarCliente(nome : string, fone : string, email : string, imagem : File) {
@@ -44,40 +47,13 @@ export class ClienteService {
             mensagem: string,
             cliente: Cliente
         } > ('http://localhost:3000/api/clientes', dadosCliente).subscribe((dados) => {
-            //cliente.id = dados.id;
-            const cliente: Cliente = {
-                id: dados.cliente.id,
-                nome: nome,
-                fone: fone,
-                email: email,
-                imagemURL: dados.cliente.imagemURL
-            };
-            this
-                .clientes
-                .push(cliente);
-            this
-                .listaClientesAtualizada
-                .next([...this.clientes]);
-            this
-                .router
-                .navigate(['/']);
+          this.router.navigate(['/']);
         })
     }
 
-    removerCliente(id : string): void {
-        this
-            .httpClient
-            .delete(`http://localhost:3000/api/clientes/${id}`)
-            .subscribe(() => {
-                this.clientes = this
-                    .clientes
-                    .filter((cli) => {
-                        return cli.id !== id
-                    });
-                this
-                    .listaClientesAtualizada
-                    .next([...this.clientes]);
-            });
+    removerCliente(id : string) {
+        return this.httpClient
+            .delete(`http://localhost:3000/api/clientes/${id}`);
     }
     getListaDeClientesAtualizadaObservable() {
         return this
@@ -127,20 +103,6 @@ export class ClienteService {
             .httpClient
             .put(`http://localhost:3000/api/clientes/${id}`, clienteData)
             .subscribe((res => {
-                const copia = [...this.clientes];
-                const indice = copia.findIndex(cli => cli.id === id);
-                const cliente: Cliente = {
-                    id: id,
-                    nome: nome,
-                    fone: fone,
-                    email: email,
-                    imagemURL: ""
-                }
-                copia[indice] = cliente;
-                this.clientes = copia;
-                this
-                    .listaClientesAtualizada
-                    .next([...this.clientes]);
                 this
                     .router
                     .navigate(['/'])

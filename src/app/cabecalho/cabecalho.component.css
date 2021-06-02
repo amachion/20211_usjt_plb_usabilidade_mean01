@@ -10,3 +10,6 @@ a {
 .separador {
   flex: 1;
 }
+ul {
+  display: flex;
+}

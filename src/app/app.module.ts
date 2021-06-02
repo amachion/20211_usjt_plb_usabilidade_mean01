@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 //remover esse
 //import { FormsModule } from '@angular/forms';
 //inserir esse
-import { ReactiveFormsModule } from '@angular/forms'
+import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -20,13 +20,15 @@ import { ClienteListaComponent } from './clientes/cliente-lista/cliente-lista.co
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ClienteService } from './clientes/cliente.service';
+import { LoginComponent } from './auth/login/login.component';
+import { SignupComponent } from './auth/signup/signup.component';
 
 @NgModule({
   declarations: [
-    AppComponent, ClienteInserirComponent, CabecalhoComponent, ClienteListaComponent
+    AppComponent, ClienteInserirComponent, CabecalhoComponent, ClienteListaComponent, LoginComponent, SignupComponent
   ],
   imports: [
-    BrowserModule, ReactiveFormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatPaginatorModule, MatToolbarModule, MatExpansionModule, MatProgressSpinnerModule,
+    BrowserModule, ReactiveFormsModule, NoopAnimationsModule, MatInputModule, MatCardModule, MatButtonModule, MatPaginatorModule, MatToolbarModule, MatExpansionModule, MatProgressSpinnerModule, FormsModule,
     HttpClientModule, AppRoutingModule
   ],
   providers: [ClienteService],

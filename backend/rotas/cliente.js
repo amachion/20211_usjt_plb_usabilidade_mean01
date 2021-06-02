@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Cliente = require('../models/cliente');
 const multer = require("multer");
+const cliente = require("../models/cliente");
 
 const MIME_TYPE_EXTENSAO_MAPA = {
     'image/png': 'png',
@@ -62,16 +63,21 @@ router.get('', (req, res, next) => {
     const pageSize = +req.query.pagesize;
     const page = +req.query.page;
     const consulta = Cliente.find(); //só executa quando chamamos then
+    let clientesEncontrados;
     if (pageSize && page) {
         consulta
             .skip(pageSize * (page - 1))
             .limit(pageSize);
     }
     consulta.then(documents => {
-        //console.log(documents)
-        res
-            .status(200)
-            .json({mensagem: "Tudo OK", clientes: documents});
+        clientesEncontrados = documents;
+        return Cliente.count();
+    })
+    .then ((count) => {
+      res
+        .status(200)
+        .json({mensagem: "Tudo OK", clientes: clientesEncontrados, maxClientes: count
+      });
     })
 });
 router.delete('/:id', (req, res, next) => {

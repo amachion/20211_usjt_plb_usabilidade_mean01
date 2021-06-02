@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const Cliente = require('./models/cliente');
 
 const clienteRoutes = require ('./rotas/cliente');
+const usuarioRoutes = require ('./rotas/usuario');
 
 app.use(bodyParser.json());
 //app.use(express.json());
@@ -25,4 +26,5 @@ mongoose.connect('mongodb+srv://user_base:outrasenha@cluster0.skf8n.mongodb.net/
   })
 
 app.use ('/api/clientes', clienteRoutes);
+app.use ('/api/usuario', usuarioRoutes);
 module.exports = app;
